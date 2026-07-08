@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.1.5...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.2.0...main)
+
+## [2.2.0](https://github.com/dotenvx/dotenvx/compare/v2.1.5...v2.2.0) (2026-07-07)
+
+### Added
+
+* Use `dotenvx keychain up|down` to move your private keys to your macOS Keychain ([#872](https://github.com/dotenvx/dotenvx/pull/872))
 
 ## [2.1.5](https://github.com/dotenvx/dotenvx/compare/v2.1.4...v2.1.5) (2026-07-06)
 
