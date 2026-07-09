@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.3.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.3.1...main)
+
+## [2.3.1](https://github.com/dotenvx/dotenvx/compare/v2.3.0...v2.3.1) (2026-07-08)
+
+### Changed
+
+* Fix correct default valuation interpolation for empty strings by upgrading primitives package
 
 ## [2.3.0](https://github.com/dotenvx/dotenvx/compare/v2.2.2...v2.3.0) (2026-07-08)
 
