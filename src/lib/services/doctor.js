@@ -1,6 +1,6 @@
 const { fdir: Fdir } = require('fdir')
 const path = require('path')
-const picomatch = require('picomatch')
+const { match } = require('@dotenvx/primitives')
 const fsx = require('./../helpers/fsx')
 
 const patterns = [
@@ -33,7 +33,7 @@ class Doctor {
       '**/coverage/**',
       '**/.next/**'
     ]
-    this.exclude = picomatch(this.ignore)
+    this.exclude = match(this.ignore)
   }
 
   run () {

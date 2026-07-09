@@ -1,6 +1,6 @@
 const { fdir: Fdir } = require('fdir')
 const path = require('path')
-const picomatch = require('picomatch')
+const { match } = require('@dotenvx/primitives')
 
 function patternsFor (value) {
   if (!Array.isArray(value)) {
@@ -25,8 +25,8 @@ function ls (options = {}) {
   const excludeEnvFile = options.excludeEnvFile || []
   const excludePatterns = excludePatternsFor(excludeEnvFile)
   const excludes = excludePatterns.length > 0 ? ignore.concat(excludePatterns) : ignore
-  const exclude = picomatch(excludes, { dot: true })
-  const include = picomatch(patternsFor(envFile), {
+  const exclude = match(excludes, { dot: true })
+  const include = match(patternsFor(envFile), {
     dot: true,
     ignore: excludes
   })
