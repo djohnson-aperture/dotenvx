@@ -1,57 +1,13 @@
 const { logger } = require('./../../shared/logger')
 
-const conventions = require('./../../lib/helpers/conventions')
 const escape = require('./../../lib/helpers/escape')
 const catchAndLog = require('./../../lib/helpers/catchAndLog')
 const createSpinner = require('../../lib/helpers/createSpinner')
 const Session = require('../../db/session')
 const getResolver = require('./../../lib/resolvers/get')
 const normalizeDotenvConfigConvention = require('../../lib/helpers/normalizeDotenvConfigConvention')
-const resolveDirectoryFilepath = require('../../lib/helpers/resolveDirectoryFilepath')
-
-function buildEnvs (envs, convention) {
-  const resolvedEnvs = []
-  let hasDirectory = false
-
-  for (const env of envs) {
-    if (env.type !== 'envFile') {
-      resolvedEnvs.push(env)
-      continue
-    }
-
-    const envFilepath = resolveDirectoryFilepath(env.value, '.env')
-    if (envFilepath === env.value) {
-      resolvedEnvs.push(env)
-      continue
-    }
-
-    hasDirectory = true
-    if (convention) {
-      for (const conventionEnv of conventions(convention)) {
-        resolvedEnvs.push({
-          ...conventionEnv,
-          value: resolveDirectoryFilepath(env.value, conventionEnv.value)
-        })
-      }
-    } else {
-      resolvedEnvs.push({ ...env, value: envFilepath })
-    }
-  }
-
-  if (convention && !hasDirectory) {
-    return conventions(convention).concat(resolvedEnvs)
-  }
-
-  return resolvedEnvs
-}
-
-function resolveEnvKeysFile (envKeysFile) {
-  if (Array.isArray(envKeysFile)) {
-    return envKeysFile.map(filepath => resolveDirectoryFilepath(filepath, '.env.keys'))
-  }
-
-  return envKeysFile && resolveDirectoryFilepath(envKeysFile, '.env.keys')
-}
+const buildCommandEnvs = require('../../lib/helpers/buildCommandEnvs')
+const resolveEnvKeysFile = require('../../lib/helpers/resolveEnvKeysFile')
 
 async function get (key) {
   const options = normalizeDotenvConfigConvention(this.opts())
@@ -66,7 +22,7 @@ async function get (key) {
   const ignore = options.ignore || []
   let errorCount = 0
 
-  const envs = buildEnvs(this.envs, options.convention)
+  const envs = buildCommandEnvs(this.envs, options.convention)
 
   try {
     const sesh = new Session()
