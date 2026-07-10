@@ -37,17 +37,16 @@ async function encryptTransform (options = {}) {
   const fk = options.fk || '.env.keys'
   let noArmor = options.noArmor // key storage selector below
   const noCreate = options.noCreate
-  const keysFilepath = Array.isArray(fk) ? null : fk
 
   const processedEnvs = []
   const changedFilepaths = []
   const unchangedFilepaths = []
 
   let keysSrc
-  if (keysFilepath && await fsx.exists(keysFilepath)) {
+  if (await fsx.exists(fk)) {
     try {
-      const encoding = await detectEncoding(keysFilepath)
-      keysSrc = await fsx.readFileX(keysFilepath, { encoding })
+      const encoding = await detectEncoding(fk)
+      keysSrc = await fsx.readFileX(fk, { encoding })
     } catch (err) {
       if (err.code === 'EACCES' || err.code === 'EPERM') {
         // do nothing (scenario: chmod a-r .env.keys)
@@ -84,10 +83,6 @@ async function encryptTransform (options = {}) {
       let publicKey = publickeys(row.envSrc)[0]
 
       if (!publicKey) {
-        if (Array.isArray(fk)) {
-          throw new Errors().multipleEnvKeysFiles()
-        }
-
         if (!noCreate && !noArmor && selectKeyStorage) {
           noArmor = await selectKeyStorage() !== 'armored'
         }
@@ -97,7 +92,7 @@ async function encryptTransform (options = {}) {
         publicKey = kp.publicKey
         const privateKey = kp.privateKey
         const { publicKeyName, privateKeyName } = keynames(envFilepath)
-        const { envSrc } = mutateSrc({ envSrc: row.envSrc, envFilepath, keysFilepath, publicKeyName, publicKeyValue: publicKey })
+        const { envSrc } = mutateSrc({ envSrc: row.envSrc, envFilepath, keysFilepath: fk, publicKeyName, publicKeyValue: publicKey })
         row.envSrc = envSrc
 
         const comment = path.basename(envFilepath)

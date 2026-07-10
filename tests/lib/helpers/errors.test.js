@@ -52,17 +52,6 @@ t.test('#errors missingEnvKeysFile falls back to .env.keys', ct => {
   ct.end()
 })
 
-t.test('#errors multipleEnvKeysFiles', ct => {
-  const result = new Errors({}).multipleEnvKeysFiles()
-
-  t.equal(result.code, 'MULTIPLE_ENV_KEYS_FILES')
-  t.equal(result.message, '[MULTIPLE_ENV_KEYS_FILES] cannot create a new private key with multiple -fk values')
-  t.equal(result.help, 'fix: [pass a single -fk when creating a new private key]')
-  t.equal(result.messageWithHelp, '[MULTIPLE_ENV_KEYS_FILES] cannot create a new private key with multiple -fk values. fix: [pass a single -fk when creating a new private key]')
-
-  ct.end()
-})
-
 t.test('#errors missingPublicKey', ct => {
   const result = new Errors({}).missingPublicKey()
 
