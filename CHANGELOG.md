@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.7.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.7.1...main)
+
+## [2.7.1](https://github.com/dotenvx/dotenvx/compare/v2.7.0...v2.7.1) (2026-07-13)
+
+### Changed
+
+* Security Improvement: `dotenvx armor login` attempts to set the `DOTENVX_ARMOR_TOKEN` in your native OS secret store going forward. For current Armor users run `dotenvx armor logout` and then `dotenvx armor login` to make use of this immediately. ([#886](https://github.com/dotenvx/dotenvx/pull/886))
 
 ## [2.7.0](https://github.com/dotenvx/dotenvx/compare/v2.6.0...v2.7.0) (2026-07-13)
 
