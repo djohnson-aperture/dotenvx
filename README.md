@@ -2648,6 +2648,8 @@ Log in to Dotenvx Armor.
 $ dotenvx armor login
 ```
 
+After authentication, dotenvx first attempts to store your access token in your operating system's native secret store: macOS Keychain, Windows Credential Manager, or Linux Secret Service. If native secure storage is unavailable, dotenvx falls back to its settings file. This follows a common CLI credential-storage pattern: prefer protected OS storage when available while remaining usable in headless or minimal environments.
+
 </details>
 <details><summary>`armor logout`</summary><br>
 
@@ -2655,6 +2657,38 @@ Log out of Dotenvx Armor.
 
 ```sh
 $ dotenvx armor logout
+```
+
+</details>
+<details><summary>`armor status`</summary><br>
+
+Print the current Armor status. It returns `on` when you are logged in and Armor is enabled; otherwise it returns `off`.
+
+```sh
+$ dotenvx armor status
+on
+```
+
+</details>
+<details><summary>`armor settings`</summary><br>
+
+Inspect and manage your local Armor settings.
+
+```sh
+$ dotenvx armor settings username
+$ dotenvx armor settings token
+$ dotenvx armor settings device
+$ dotenvx armor settings hostname
+$ dotenvx armor settings path
+$ dotenvx armor settings on
+$ dotenvx armor settings off
+```
+
+Access tokens and device public keys are masked by default. Reveal the complete value only when you explicitly need it.
+
+```sh
+$ dotenvx armor settings token --unmask
+$ dotenvx armor settings device --unmask
 ```
 
 </details>
