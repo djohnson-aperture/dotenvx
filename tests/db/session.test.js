@@ -185,7 +185,7 @@ t.test('Session notifyUpdate checks dotenvx VERSION endpoint and stores dotenvx 
   ct.same(httpStub.firstCall.args, ['https://dotenvx.sh/VERSION'])
   ct.equal(values.DOTENVX_VERSION, '9.9.9')
   ct.equal(values.DOTENVX_VERSION_LAST_CHECK, 1710000000000)
-  ct.ok(consoleErrorStub.calledWith('⛆ update available [npm install @dotenvx/dotenvx@latest]'))
+  ct.ok(consoleErrorStub.calledWith('⛆ update available [curl -sfS https://dotenvx.sh | sh]'))
 })
 
 t.test('Session notifyUpdate skips check when dotenvx version was checked recently', async ct => {

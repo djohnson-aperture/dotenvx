@@ -187,7 +187,7 @@ class Session {
       store.set(DOTENVX.VERSION_LAST_CHECK, now)
 
       if (versionGreaterThan(remote, packageJson.version)) {
-        console.error('⛆ update available [npm install @dotenvx/dotenvx@latest]')
+        console.error('⛆ update available [curl -sfS https://dotenvx.sh | sh]')
       }
     } catch (error) {
       logger.debug(error.message)
@@ -222,6 +222,14 @@ class Session {
   //
   // Set/Delete
   //
+  setInSecretStore (key, value) {
+    return this.createStore().set(key, value)
+  }
+
+  deleteFromSecretStore (key) {
+    return this.openStore().delete(key)
+  }
+
   login (hostname, id, username, accessToken) {
     if (!hostname) {
       throw new Error('DOTENVX_ARMOR_HOSTNAME not set. Run [dotenvx armor login]')
@@ -242,7 +250,7 @@ class Session {
     const store = this.createStore()
     store.set(ARMOR.USER, id)
     store.set(ARMOR.USERNAME, username)
-    store.set(ARMOR.TOKEN, accessToken)
+    this.setInSecretStore(ARMOR.TOKEN, accessToken)
     store.set(ARMOR.HOSTNAME, hostname)
 
     return accessToken
@@ -266,7 +274,7 @@ class Session {
 
     store.delete(ARMOR.USER)
     store.delete(ARMOR.USERNAME)
-    store.delete(ARMOR.TOKEN)
+    this.deleteFromSecretStore(ARMOR.TOKEN)
     store.delete(ARMOR.HOSTNAME)
     store.delete(DOTENVX.VERSION)
     store.delete(DOTENVX.VERSION_LAST_CHECK)
