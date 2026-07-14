@@ -2,11 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.8.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.9.0...main)
+
+## [2.9.0](https://github.com/dotenvx/dotenvx/compare/v2.8.0...v2.9.0) (2026-07-14)
 
 ### Changed
 
-* **Breaking:** `ls` from `@dotenvx/dotenvx` now returns a `Promise<string[]>` and must be awaited. This keeps directory traversal asynchronous so CLI progress indicators can continue rendering while large directory trees are searched.
+* BREAKING: `ls` from `@dotenvx/dotenvx` is now async/await.
 
 ## [2.8.0](https://github.com/dotenvx/dotenvx/compare/v2.7.3...v2.8.0) (2026-07-14)
 
