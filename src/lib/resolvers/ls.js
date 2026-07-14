@@ -2,6 +2,14 @@ const { Fdir } = require('@dotenvx/tooling')
 const path = require('path')
 const { match } = require('@dotenvx/primitives')
 
+const DEFAULT_EXCLUDED_DIRECTORY_EXTENSIONS = new Set([
+  '.app',
+  '.key',
+  '.numbers',
+  '.pages',
+  '.photoslibrary'
+])
+
 function patternsFor (value) {
   if (!Array.isArray(value)) {
     return [`**/${value}`]
@@ -41,6 +49,7 @@ async function ls (options = {}) {
     .withRelativePaths()
     .exclude((dirname, directory) => {
       if (dirname === 'node_modules' || dirname === '.git') return true
+      if (DEFAULT_EXCLUDED_DIRECTORY_EXTENSIONS.has(path.extname(dirname).toLowerCase())) return true
 
       onDirectory(path.relative(cwd, directory) || '.')
       return false

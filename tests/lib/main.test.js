@@ -440,6 +440,21 @@ t.test('ls finds env files',
         ignored: {
           '.env': ''
         }
+      },
+      'presentation.key': {
+        '.env': ''
+      },
+      'document.pages': {
+        '.env': ''
+      },
+      'spreadsheet.numbers': {
+        '.env': ''
+      },
+      'application.app': {
+        '.env': ''
+      },
+      'library.photoslibrary': {
+        '.env': ''
       }
     })
 
