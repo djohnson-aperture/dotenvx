@@ -9,7 +9,8 @@ const Session = require('../../db/session')
 
 async function encryptAction () {
   const options = this.opts()
-  const spinner = await createSpinner({ ...options, text: 'encrypting' })
+  const spinnerOptions = typeof this.optsWithGlobals === 'function' ? this.optsWithGlobals() : options
+  const spinner = await createSpinner({ ...spinnerOptions, ...options, text: 'encrypting' })
   const sesh = new Session()
 
   logger.debug(`options: ${JSON.stringify(options)}`)

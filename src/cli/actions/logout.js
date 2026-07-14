@@ -8,7 +8,8 @@ const FRAMES = ['◐', '◓', '◑', '◒']
 
 async function logout () {
   const options = this.opts()
-  const spinner = await createSpinner({ ...options, text: 'logging out', frames: FRAMES })
+  const spinnerOptions = typeof this.optsWithGlobals === 'function' ? this.optsWithGlobals() : options
+  const spinner = await createSpinner({ ...spinnerOptions, ...options, text: 'logging out', frames: FRAMES })
 
   logger.debug(`options: ${JSON.stringify(options)}`)
 

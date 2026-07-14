@@ -6,7 +6,8 @@ const armoredKeyDisplay = require('../../../lib/helpers/armoredKeyDisplay')
 
 async function move () {
   const options = this.opts()
-  const spinner = await createSpinner({ ...options, text: 'moving' })
+  const spinnerOptions = typeof this.optsWithGlobals === 'function' ? this.optsWithGlobals() : options
+  const spinner = await createSpinner({ ...spinnerOptions, ...options, text: 'moving' })
 
   logger.debug(`options: ${JSON.stringify(options)}`)
 

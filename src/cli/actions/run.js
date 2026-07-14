@@ -51,6 +51,7 @@ function uniqueInjectedKeys (processedEnvs) {
 
 async function run () {
   const options = normalizeDotenvConfigConvention(normalizeDotenvConfigQuiet(this.opts()))
+  const spinnerOptions = typeof this.optsWithGlobals === 'function' ? this.optsWithGlobals() : options
   const maskEnabled = options.mask !== undefined
   let showChar = options.mask
   if (options.mask === true) {
@@ -63,7 +64,7 @@ async function run () {
     commandArgs = inferCommandArgsFromProcessArgv(process.argv)
   }
 
-  const spinner = await createSpinner({ ...options, text: 'injecting' })
+  const spinner = await createSpinner({ ...spinnerOptions, ...options, text: 'injecting' })
 
   let debugOptions = options
   if (maskEnabled) {
