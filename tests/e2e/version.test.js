@@ -50,7 +50,8 @@ t.test('#armor --help shows login and logout commands', ct => {
 t.test('#run --help shows redaction, armor, and native flags', ct => {
   const output = execShell(`${dotenvx} run --help`)
 
-  ct.match(output, /--no-redact\b/, 'no-redact is shown')
+  ct.match(output, /--redact\b/, 'redact is shown')
+  ct.notMatch(output, /--no-redact\b/, 'no-redact is removed')
   ct.match(output, /--no-armor\b/, 'no-armor is shown')
   ct.match(output, /--no-native\b/, 'no-native is shown')
   ct.notMatch(output, /--no-keychain\b/, 'no-keychain is removed')

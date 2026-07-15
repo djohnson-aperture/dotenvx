@@ -55,7 +55,7 @@ async function run () {
   const options = normalizeDotenvConfigConvention(normalizeDotenvConfigQuiet(this.opts()))
   const spinnerOptions = typeof this.optsWithGlobals === 'function' ? this.optsWithGlobals() : options
   const maskEnabled = options.mask !== undefined
-  const redactEnabled = options.redact !== false
+  const redactEnabled = options.redact === true
   let showChar = options.mask
   if (options.mask === true) {
     showChar = 6
