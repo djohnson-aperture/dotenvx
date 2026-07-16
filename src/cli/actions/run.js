@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const { logger } = require('./../../shared/logger')
-const { parseSync } = require('@dotenvx/primitives')
+const { scan } = require('@dotenvx/primitives')
 
 const executeCommand = require('./../../lib/helpers/executeCommand')
 const envsResolver = require('./../../lib/resolvers/envs')
@@ -108,18 +108,6 @@ async function run () {
   }
 
   try {
-    if (options.validate && !fs.existsSync('.env.example')) {
-      const error = new Errors().missingEnvExample()
-
-      if (ignore.includes(error.code)) {
-        logger.verbose(`ignored: ${error.message}`)
-      } else if (options.strict) {
-        throw error
-      } else {
-        logger.error(error.messageWithHelp || error.message)
-      }
-    }
-
     let envs = buildCommandEnvs(this.envs, options.convention)
     envs = determine(envs, process.env)
 
@@ -151,15 +139,23 @@ async function run () {
       maskProcessedEnvs(processedEnvs, commandEnv, showChar)
     }
 
-    if (options.validate && fs.existsSync('.env.example')) {
-      const exampleSrc = fs.readFileSync('.env.example', 'utf8')
-      const { parsed: example } = parseSync(exampleSrc, { processEnv: {} })
-      const validation = validate(example, process.env, { exampleSrc })
+    if (options.validate) {
+      let error
 
-      if (!validation.valid) {
-        const message = validation.errors.map(error => error.message).join('; ')
-        const error = new Errors({ message }).validationFailed()
+      if (!fs.existsSync('.env.example')) {
+        error = new Errors().missingEnvExample()
+      } else {
+        const exampleSrc = fs.readFileSync('.env.example', 'utf8')
+        const { parsed: example, comments } = scan(exampleSrc)
+        const validation = validate(example, process.env, { comments })
 
+        if (!validation.valid) {
+          const message = validation.errors.map(error => error.message).join('; ')
+          error = new Errors({ message }).validationFailed()
+        }
+      }
+
+      if (error) {
         if (ignore.includes(error.code)) {
           logger.verbose(`ignored: ${error.message}`)
         } else if (options.strict) {
