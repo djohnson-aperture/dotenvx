@@ -12,6 +12,7 @@ const ISSUE_BY_CODE = {
   MALFORMED_ENCRYPTED_DATA: 'https://github.com/dotenvx/dotenvx/issues/467',
   MISPAIRED_PRIVATE_KEY: 'https://github.com/dotenvx/dotenvx/issues/752',
   MISSING_DIRECTORY: 'https://github.com/dotenvx/dotenvx/issues/758',
+  MISSING_ENV_EXAMPLE: 'https://github.com/dotenvx/dotenvx/issues/905',
   MISSING_ENV_FILE: 'https://github.com/dotenvx/dotenvx/issues/484',
   MISSING_ENV_KEYS_FILE: 'https://github.com/dotenvx/dotenvx/issues/775',
   MISSING_ENV_FILES: 'https://github.com/dotenvx/dotenvx/issues/760',
@@ -198,6 +199,18 @@ class Errors {
     const code = 'MISSING_ENV_FILE'
     const envFilepath = this.envFilepath || '.env'
     const message = `[${code}] missing file (${envFilepath})`
+    const help = `fix: [${ISSUE_BY_CODE[code]}]`
+
+    const e = new Error(message)
+    e.code = code
+    e.help = help
+    e.messageWithHelp = `${message}. ${help}`
+    return e
+  }
+
+  missingEnvExample () {
+    const code = 'MISSING_ENV_EXAMPLE'
+    const message = `[${code}] missing .env.example file`
     const help = `fix: [${ISSUE_BY_CODE[code]}]`
 
     const e = new Error(message)

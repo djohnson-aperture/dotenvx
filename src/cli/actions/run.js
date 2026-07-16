@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 const { logger } = require('./../../shared/logger')
 
 const executeCommand = require('./../../lib/helpers/executeCommand')
@@ -15,6 +16,7 @@ const maskEnvSrc = require('../../lib/helpers/maskEnvSrc')
 const maskProcessedEnvs = require('../../lib/helpers/maskProcessedEnvs')
 const redactedValues = require('../../lib/helpers/redactedValues')
 const { redactOutput } = require('../../lib/helpers/redactOutput')
+const Errors = require('../../lib/helpers/errors')
 
 const { determine } = require('./../../lib/helpers/envResolution')
 
@@ -104,6 +106,18 @@ async function run () {
   }
 
   try {
+    if (options.validate && !fs.existsSync('.env.example')) {
+      const error = new Errors().missingEnvExample()
+
+      if (ignore.includes(error.code)) {
+        logger.verbose(`ignored: ${error.message}`)
+      } else if (options.strict) {
+        throw error
+      } else {
+        logger.error(error.messageWithHelp || error.message)
+      }
+    }
+
     let envs = buildCommandEnvs(this.envs, options.convention)
     envs = determine(envs, process.env)
 
