@@ -1,4 +1,5 @@
 const { execFile, execFileSync } = require('child_process')
+const Errors = require('./errors')
 
 function execFileAsync (command, args, options) {
   return new Promise((resolve, reject) => {
@@ -15,15 +16,16 @@ function isSecretReference (value) {
 
 function resolutionError (key, error) {
   const message = error && error.code === 'ENOENT'
-    ? '1Password CLI (op) not found'
-    : '1Password CLI could not read the secret reference'
+    ? `1Password CLI is not installed and could not resolve ${key}`
+    : `1Password CLI failed to resolve ${key}`
 
-  const resolvedError = new Error(`could not resolve ${key}: ${message}`)
-  resolvedError.code = 'ONEPASSWORD_RESOLUTION_FAILED'
-  return resolvedError
+  return new Errors({ message }).onePasswordFailed()
 }
 
 async function resolveOnePassword (parsed) {
+  const errors = []
+  const unresolved = []
+
   for (const [key, value] of Object.entries(parsed)) {
     if (!isSecretReference(value)) continue
 
@@ -34,14 +36,19 @@ async function resolveOnePassword (parsed) {
       })
       parsed[key] = stdout
     } catch (error) {
-      throw resolutionError(key, error)
+      errors.push(resolutionError(key, error))
+      unresolved.push(key)
+      delete parsed[key]
     }
   }
 
-  return parsed
+  return { errors, unresolved }
 }
 
 function resolveOnePasswordSync (parsed) {
+  const errors = []
+  const unresolved = []
+
   for (const [key, value] of Object.entries(parsed)) {
     if (!isSecretReference(value)) continue
 
@@ -52,11 +59,13 @@ function resolveOnePasswordSync (parsed) {
         stdio: ['ignore', 'pipe', 'pipe']
       })
     } catch (error) {
-      throw resolutionError(key, error)
+      errors.push(resolutionError(key, error))
+      unresolved.push(key)
+      delete parsed[key]
     }
   }
 
-  return parsed
+  return { errors, unresolved }
 }
 
 module.exports = resolveOnePassword

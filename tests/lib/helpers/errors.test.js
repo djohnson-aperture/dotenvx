@@ -52,6 +52,17 @@ t.test('#errors validationFailed', ct => {
   ct.end()
 })
 
+t.test('#errors onePasswordFailed', ct => {
+  const result = new Errors({ message: '1Password CLI failed to resolve API_KEY' }).onePasswordFailed()
+
+  t.equal(result.code, '1PASSWORD_FAILED')
+  t.equal(result.message, '[1PASSWORD_FAILED] 1Password CLI failed to resolve API_KEY')
+  t.equal(result.help, 'fix: [https://www.1password.dev/cli/get-started]')
+  t.equal(result.messageWithHelp, '[1PASSWORD_FAILED] 1Password CLI failed to resolve API_KEY. fix: [https://www.1password.dev/cli/get-started]')
+
+  ct.end()
+})
+
 t.test('#errors missingEnvKeysFile falls back to .env.keys', ct => {
   const result = new Errors({}).missingEnvKeysFile()
 

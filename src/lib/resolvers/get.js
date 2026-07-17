@@ -51,6 +51,7 @@ function buildOptions (options, processEnv) {
     envKeysFilepath: options.envKeysFilepath || options.envKeysFile || null,
     noArmor: options.noArmor,
     noKeychain: options.noKeychain,
+    no1Password: options.no1Password,
     onStatus: options.onStatus
   }
 }
