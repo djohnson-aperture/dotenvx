@@ -145,5 +145,11 @@ function resolveBitwardenPasswordSync (parsed) {
   return { errors, unresolved }
 }
 
+function request () {
+  const options = { session: process.env.BW_SESSION }
+  return parsed => resolveBitwardenPassword(parsed, options)
+}
+
 module.exports = resolveBitwardenPassword
+module.exports.request = request
 module.exports.sync = resolveBitwardenPasswordSync

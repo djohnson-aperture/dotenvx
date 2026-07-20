@@ -72,7 +72,7 @@ function buildParseOptions ({ processEnv, overload, envKeysFilepath, provider, d
   return options
 }
 
-async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password, noBitwarden, bitwarden }) {
+async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password, noBitwarden, resolveBitwarden }) {
   const row = {}
   row.type = TYPE_ENV
   row.string = env.value
@@ -111,7 +111,7 @@ async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider
     }
 
     if (!noBitwarden) {
-      const passwordResult = await resolveBitwardenPassword(row.injected, bitwarden)
+      const passwordResult = await resolveBitwarden(row.injected)
       row.errors.push(...passwordResult.errors)
       for (const key of passwordResult.unresolved) delete row.parsed[key]
 
@@ -180,7 +180,7 @@ function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, 
   return row
 }
 
-async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password, noBitwarden, bitwarden }) {
+async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password, noBitwarden, resolveBitwarden }) {
   const row = {}
   row.type = TYPE_ENV_FILE
   row.filepath = env.value
@@ -222,7 +222,7 @@ async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, prov
     }
 
     if (!noBitwarden) {
-      const passwordResult = await resolveBitwardenPassword(row.injected, bitwarden)
+      const passwordResult = await resolveBitwarden(row.injected)
       row.errors.push(...passwordResult.errors)
       for (const key of passwordResult.unresolved) delete row.parsed[key]
 
@@ -309,9 +309,7 @@ async function envs (options = {}) {
   const envKeysFilepath = options.envKeysFilepath || options.envKeysFile || null
   const provider = await providers(options)
   const decryptor = await decryptors(options)
-  const bitwarden = {
-    session: process.env.BW_SESSION
-  }
+  const resolveBitwarden = resolveBitwardenPassword.request()
 
   for (const env of options.envs || []) {
     if (env.type === TYPE_ENV_FILE) {
@@ -325,7 +323,7 @@ async function envs (options = {}) {
         readableFilepaths,
         no1Password: options.no1Password,
         noBitwarden: options.noBitwarden,
-        bitwarden
+        resolveBitwarden
       }))
     } else if (env.type === TYPE_ENV) {
       processedEnvs.push(await injectEnv({
@@ -337,7 +335,7 @@ async function envs (options = {}) {
         decryptor,
         no1Password: options.no1Password,
         noBitwarden: options.noBitwarden,
-        bitwarden
+        resolveBitwarden
       }))
     }
   }
