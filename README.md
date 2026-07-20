@@ -156,6 +156,8 @@ see [Codex redaction guide](https://dotenvx.com/docs/cli/run-redact-codex-exec)
 </details>
 <details><summary>1Password 🔐</summary><br>
 
+Run with secrets resolved directly from 1Password.
+
 ```sh
 $ echo "HELLO=op://Personal/hello/password" > .env
 $ dotenvx run -- sh -c 'echo Hello $HELLO'
