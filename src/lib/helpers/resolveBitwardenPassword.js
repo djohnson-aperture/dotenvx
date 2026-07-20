@@ -1,6 +1,7 @@
 const { execFile, execFileSync } = require('child_process')
 const Errors = require('./errors')
 const prompts = require('./prompts')
+const createSpinner = require('./createSpinner')
 
 const FIELDS = new Set(['username', 'password', 'uri'])
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -35,8 +36,8 @@ function parseSecretReference (value) {
 async function session (options) {
   if (options.session) return options.session
 
-  if (options.interactive && process.stdin.isTTY && process.stderr.isTTY) {
-    if (options.onPrompt) options.onPrompt()
+  if (process.stdin.isTTY && process.stderr.isTTY) {
+    createSpinner.pause()
     const password = await prompts.password({
       message: 'Bitwarden master password',
       prefix: '◇',
@@ -45,6 +46,7 @@ async function session (options) {
       input: process.stdin,
       output: process.stderr
     })
+    createSpinner.resume()
     const passwordEnv = 'DOTENVX_BITWARDEN_PASSWORD'
     options.session = secretValue(await execFileAsync('bw', ['unlock', '--passwordenv', passwordEnv, '--raw'], {
       encoding: 'utf8',

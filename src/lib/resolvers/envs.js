@@ -310,8 +310,6 @@ async function envs (options = {}) {
   const provider = await providers(options)
   const decryptor = await decryptors(options)
   const bitwarden = {
-    interactive: options.interactiveBitwarden,
-    onPrompt: options.onBitwardenPrompt,
     session: process.env.BW_SESSION
   }
 

@@ -45,9 +45,15 @@ t.test('unlocks once and keeps the session in memory for an interactive request'
   Object.defineProperty(process.stdin, 'isTTY', { configurable: true, value: true })
   Object.defineProperty(process.stderr, 'isTTY', { configurable: true, value: true })
   const calls = []
+  const spinnerCalls = []
   const resolveBitwardenPassword = proxyquire('../../../src/lib/helpers/resolveBitwardenPassword', {
     './prompts': {
       password: async () => 'master-password',
+      '@noCallThru': true
+    },
+    './createSpinner': {
+      pause: () => spinnerCalls.push('pause'),
+      resume: () => spinnerCalls.push('resume'),
       '@noCallThru': true
     },
     child_process: {
@@ -65,7 +71,7 @@ t.test('unlocks once and keeps the session in memory for an interactive request'
   }
 
   try {
-    const result = await resolveBitwardenPassword(parsed, { interactive: true })
+    const result = await resolveBitwardenPassword(parsed)
 
     ct.same(parsed, { PASSWORD: 'password-value', URI: 'uri-value' })
     ct.same(calls.map(call => call[1]), [
@@ -73,6 +79,7 @@ t.test('unlocks once and keeps the session in memory for an interactive request'
       ['get', 'password', ITEM_ID],
       ['get', 'uri', ITEM_ID]
     ])
+    ct.same(spinnerCalls, ['pause', 'resume'])
     ct.equal(calls[0][2].env.DOTENVX_BITWARDEN_PASSWORD, 'master-password')
     ct.equal(calls[1][2].env.BW_SESSION, 'request-session')
     ct.equal(calls[2][2].env.BW_SESSION, 'request-session')
