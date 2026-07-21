@@ -3489,7 +3489,7 @@ Set `mask: 0` to fully mask values.
 
 </details>
 
-### Config ⚙️
+### Settings ⚙️
 
 There are global settings available that can be configured as environment variables.
 
@@ -3497,12 +3497,8 @@ There are global settings available that can be configured as environment variab
 BW_SESSION=
 DOTENV_CONFIG_CONVENTION=
 DOTENV_CONFIG_QUIET=
-DOTENV_ENV=
-DOTENV_PRIVATE_KEY=
-DOTENV_PRIVATE_KEY_<ENV>=
 DOTENVX_CONFIG=
 DOTENVX_NO_ARMOR=
-NODE_ENV=
 ```
 
 &nbsp;
